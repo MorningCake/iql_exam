@@ -1,0 +1,38 @@
+server:
+  port: 8080
+
+# http://localhost:8080/api-ui.html
+springdoc:
+  api-docs:
+    path: api
+  swagger-ui:
+    operationsSorter: method
+    path: /api-ui.html
+
+spring:
+  # fix openAPI and starter bug
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  #
+  datasource:
+    url: jdbc:postgresql://localhost:5432/iql
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      max-lifetime: 2000000
+      maximum-pool-size: 10
+      idle-timeout: 600000
+      minimum-idle: 1
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  liquibase:
+    enabled: false
+
+
+
