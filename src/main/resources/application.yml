@@ -10,11 +10,9 @@ springdoc:
     path: /api-ui.html
 
 spring:
-  # fix openAPI and starter bug
   mvc:
     pathmatch:
-      matching-strategy: ant_path_matcher
-  #
+      matching-strategy: ant_path_matcher  # fix openAPI and starter bug
   datasource:
     url: jdbc:postgresql://localhost:5432/iql
     username: postgres
