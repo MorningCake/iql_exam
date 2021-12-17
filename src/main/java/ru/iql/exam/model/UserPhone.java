@@ -25,8 +25,10 @@ public class UserPhone {
     @GeneratedValue
     private Long id;
 
+    /**
+     * Номер. Паттерн (пример) +74950123456
+     */
     @Column(name = "value", nullable = false, unique = true)
-    @NotBlank
-    @Pattern(regexp = "^\\+7[\\d]{10}$")
+    @NotBlank @Pattern(regexp = "^\\+7[\\d]{10}$")
     private String value;
 }

@@ -1,18 +1,19 @@
 server:
   port: 8080
 
-# http://localhost:8080/api-ui.html
+# http://localhost:8080/api-ui.html?
+# http://localhost:8080/v3/api-docs
 springdoc:
+  version: 1.0.0
   api-docs:
-    path: api
+    path: /api
+#    resolve-schema-properties: true
   swagger-ui:
     operationsSorter: method
     path: /api-ui.html
 
+
 spring:
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher  # fix openAPI and starter bug
   datasource:
     url: jdbc:postgresql://localhost:5432/iql
     username: postgres

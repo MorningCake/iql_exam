@@ -4,12 +4,14 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Сущность - Пользователь. Soft Delete
+ * Сущность - Пользователь. Удаление - soft
  */
 @Entity
 @Table(schema = "iql_user", name = "users",
@@ -26,22 +28,36 @@ public class User {
     @GeneratedValue
     private Long id;
 
+    /**
+     * Возраст
+     */
     @Column(name = "age", nullable = false)
-    @NonNull
-    @Positive
+    @NotNull @Positive
     private Integer age;
 
+    /**
+     * Эл.почта
+     */
     @Column(name = "email", nullable = false, unique = true)
-    @Email
+    @NotBlank @Email
     private String email;
 
+    /**
+     * Профиль
+     */
     @OneToOne(optional = false, cascade = CascadeType.ALL)
     private UserProfile profile;
 
+    /**
+     * Список номеров телефонов
+     */
     @OneToMany(cascade = CascadeType.ALL)
     @Builder.Default
     private List<UserPhone> phones = new ArrayList<>();
 
+    /**
+     * Признак удаления (soft delete)
+     */
     @Column(name = "deleted", nullable = false)
     @Builder.Default
     private boolean deleted = false;
