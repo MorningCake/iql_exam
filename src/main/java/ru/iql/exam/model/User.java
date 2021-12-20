@@ -53,12 +53,14 @@ public class User {
      * Профиль
      */
     @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_id")
     private UserProfile profile;
 
     /**
      * Список номеров телефонов
      */
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     @Builder.Default
     private List<UserPhone> phones = new ArrayList<>();
 

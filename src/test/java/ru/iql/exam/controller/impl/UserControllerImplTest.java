@@ -23,12 +23,14 @@ import ru.iql.exam.mapping.dto.UserSearch;
 import ru.iql.exam.mapping.mapper.UserMapper;
 import ru.iql.exam.model.User;
 
+import javax.sql.DataSource;
 import javax.transaction.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 
+import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.OPENTABLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.iql.exam.constant.ComparisonType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,10 +38,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+//@AutoConfigureEmbeddedDatabase(provider = OPENTABLE)
 @Transactional
 @DisplayName("Тест контроллера пользователей")
 class UserControllerImplTest {
 
+    //@Autowired private DataSource dataSource;
     @Autowired private UserRepository userRepository;
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;

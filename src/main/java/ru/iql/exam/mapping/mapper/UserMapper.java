@@ -9,6 +9,8 @@ import ru.iql.exam.model.UserPhone;
 
 import java.util.List;
 
+//todo убрать лишнее, test
+
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 

@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/2021-12-21/changes/initSchema.sql
+  - include:
+      file: db/changelog/2021-12-21/changes/createTables.sql
