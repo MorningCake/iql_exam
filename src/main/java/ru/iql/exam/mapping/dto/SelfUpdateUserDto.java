@@ -14,8 +14,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Getter
 @Setter
-@Schema(
-        title = "Свой профиль для редактирования", description = "Данные для редактирования пользователем собственных данных")
+@Schema(title = "Свой профиль для редактирования", description = "Данные для редактирования пользователем собственных данных")
 public class SelfUpdateUserDto {
 
     /**

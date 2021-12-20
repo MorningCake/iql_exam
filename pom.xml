@@ -18,6 +18,8 @@
         <java.version>11</java.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
         <swagger.version>1.6.1</swagger.version>
+        <hibernate.jpamodelgen.version>5.6.3.Final</hibernate.jpamodelgen.version>
+        <assertj.version>3.21.0</assertj.version>
     </properties>
 
     <dependencies>
@@ -73,6 +75,12 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
         <!-- DTO Mapping -->
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -85,7 +93,6 @@
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>${swagger.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-data-rest</artifactId>
@@ -121,10 +128,20 @@
                             <version>${lombok.version}</version>
                         </path>
                         <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
+                        </path>
+                        <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
                             <version>${org.mapstruct.version}</version>
                         </path>
+                        <dependency>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-jpamodelgen</artifactId>
+                            <version>${hibernate.jpamodelgen.version}</version>
+                        </dependency>
                         <!-- other annotation processors -->
                     </annotationProcessorPaths>
                 </configuration>

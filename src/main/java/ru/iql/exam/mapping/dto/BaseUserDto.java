@@ -5,7 +5,10 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,20 +21,26 @@ import java.util.List;
 @Getter
 @Setter
 @Schema(title = "Новый пользователь", description = "Данные для создания/редактирования пользователя")
-public class NewUserDto extends BaseUserDto {
+public class BaseUserDto {
 
     /**
-     * Профиль
+     * Имя
      */
-    @NotNull @Valid
-    @Schema(description = "Профиль", required = true)
-    private NewUserProfileDto profile;
+    @NotBlank
+    @Schema(description = "Имя", required = true)
+    private String name;
 
     /**
-     * Список номеров телефонов
+     * Возраст
      */
-    @NotNull
-    @Schema(description = "Список номеров телефонов", required = true)
-    @Builder.Default
-    private List<@Valid NewUserPhoneDto> phones = new ArrayList<>();
+    @NotNull @Positive
+    @Schema(description = "Возраст", required = true, minimum = "1")
+    private Integer age;
+
+    /**
+     * Эл.почта
+     */
+    @NotBlank @Email
+    @Schema(description = "Эл.почта", required = true)
+    private String email;
 }

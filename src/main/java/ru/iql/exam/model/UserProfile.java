@@ -14,12 +14,12 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @EqualsAndHashCode(exclude = {"id"})
 public class UserProfile {
 
     @Id
     @GeneratedValue
+    @Setter
     private Long id;
 
     /**
@@ -27,12 +27,18 @@ public class UserProfile {
      */
     @Column(name = "cash", nullable = false)
     @NotNull
+    @Setter
     private Integer cash;
 
     /**
      * Состояние счета при создании аккаунта, коп.
      */
-    @Column(name = "start_cash", nullable = false)
+    @Column(name = "start_cash", nullable = false, updatable = false)
     @NotNull
     private Integer startCash;
+
+    @PrePersist
+    private void initStartCash() {
+        startCash = cash;
+    }
 }

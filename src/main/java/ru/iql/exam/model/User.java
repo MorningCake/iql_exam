@@ -29,6 +29,13 @@ public class User {
     private Long id;
 
     /**
+     * Имя
+     */
+    @Column(name = "name", nullable = false)
+    @NotBlank
+    private String name;
+
+    /**
      * Возраст
      */
     @Column(name = "age", nullable = false)

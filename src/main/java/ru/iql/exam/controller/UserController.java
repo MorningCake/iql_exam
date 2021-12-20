@@ -1,17 +1,14 @@
 package ru.iql.exam.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 //import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import ru.iql.exam.mapping.dto.NewUserDto;
-import ru.iql.exam.mapping.dto.SelfUpdateUserDto;
-import ru.iql.exam.mapping.dto.UserDto;
+import ru.iql.exam.mapping.dto.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 //todo ролевка
 
@@ -19,10 +16,13 @@ import java.util.List;
 @Tag(name = "Пользователи", description = "Работа с пользователями")
 public interface UserController {
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Просмотр", description = "Просмотр пользователей по фильтру")
+    @PostMapping(path = "/search/filters", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Поиск", description = "Поиск пользователей по фильтру")
     @ResponseBody
-    List<UserDto> readWithFilters(/* TODO criteria*/);
+    Page<UserDto> searchWithFilters(
+            @RequestBody @Valid UserSearch filters
+    );
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Создание", description = "Создание нового пользователя")
