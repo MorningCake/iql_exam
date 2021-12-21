@@ -12,18 +12,18 @@ import javax.persistence.criteria.*;
 import static ru.iql.exam.constant.ComparisonType.*;
 
 /**
- *
+ * Спецификация для поиска пользователей
  */
 public class UserSpec {
 
     /**
-     *
-     * @param ageFilter
-     * @param cashFilter
-     * @param name
-     * @param email
-     * @param phone
-     * @return
+     * Спецификация для поиска по фильтрам
+     * @param ageFilter фильтр по возрасту
+     * @param cashFilter фильтр по балансу
+     * @param name имя (like)
+     * @param email эл.почта (like)
+     * @param phone номер телефона (like)
+     * @return Specification<User>
      */
     public static Specification<User> getFiltersSpec(@Nullable AgeFilter ageFilter, @Nullable CashFilter cashFilter,
                                               @Nullable String name, @Nullable String email, @Nullable String phone) {
@@ -66,13 +66,13 @@ public class UserSpec {
     }
 
     /**
-     *
-     * @param value
-     * @param comparisonType
+     * Добавить числовой предикат
+     * @param value значение
+     * @param comparisonType тип сравнения
      * @param path Возвращаемое значение Root.get(...) или Join.get(...)
-     * @param builder
-     * @param predicate
-     * @return
+     * @param builder CriteriaBuilder
+     * @param predicate Predicate
+     * @return Predicate
      */
     private static Predicate addPredicateByComparisonType(
             Integer value,
@@ -96,12 +96,12 @@ public class UserSpec {
     }
 
     /**
-     *
-     * @param value
+     * Добавить текстовый предикат (like)
+     * @param value значение
      * @param path Возвращаемое значение Root.get(...) или Join.get(...)
-     * @param builder
-     * @param predicate
-     * @return
+     * @param builder CriteriaBuilder
+     * @param predicate Predicate
+     * @return Predicate
      */
     private static Predicate addLikePredicate(String value, Path<String> path, CriteriaBuilder builder, Predicate predicate) {
         predicate = builder.and(predicate, builder.like(path, "%" + value + "%"));

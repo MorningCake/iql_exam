@@ -12,6 +12,9 @@ import ru.iql.exam.model.User;
 import ru.iql.exam.service.UserService;
 import ru.iql.exam.utils.PageUtils;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -25,6 +28,16 @@ public class UserServiceImpl implements UserService {
         );
         Pageable pageable = PageUtils.getPageable(params.getPageNumber(), params.getPageSize());
         return userRepository.findAll(userFiltersSpec, pageable);
+    }
+
+    @Override
+    public User findById(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        } else {
+            throw new EntityNotFoundException("Пользователь не найден!");
+        }
     }
 
 

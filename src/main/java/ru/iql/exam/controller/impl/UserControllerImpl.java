@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
 import ru.iql.exam.controller.UserController;
 import ru.iql.exam.mapping.dto.NewUserDto;
@@ -38,7 +39,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public void updateSelf(SelfUpdateUserDto dto, Long id) {
+    public void updateSelf(SelfUpdateUserDto dto, Long id, Authentication authentication, String token) {
 
     }
 

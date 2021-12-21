@@ -1,19 +1,13 @@
 server:
   port: 8080
 
-# http://localhost:8080/api-ui.html?
-# http://localhost:8080/v3/api-docs
+# http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
 springdoc:
   version: 1.0.0
-  api-docs:
-    path: /api
-#    resolve-schema-properties: true
-  swagger-ui:
-    operationsSorter: method
-    path: /api-ui.html
-
 
 spring:
+  main:
+    allow-circular-references: true
   datasource:
     url: jdbc:postgresql://localhost:5432/iql
     username: postgres
@@ -29,9 +23,14 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
   liquibase:
-    enabled: false
+    #change-log: db\changelog\db.changelog-master.yaml
+    enabled: true
 
+jwt:
+  sessionTime: 120000000
+  secret: secret_key
+  expired_time_days: 3
 
 

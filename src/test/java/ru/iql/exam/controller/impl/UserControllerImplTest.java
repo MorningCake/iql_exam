@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,14 +24,14 @@ import ru.iql.exam.mapping.dto.UserSearch;
 import ru.iql.exam.mapping.mapper.UserMapper;
 import ru.iql.exam.model.User;
 
-import javax.sql.DataSource;
+//import javax.sql.DataSource;
 import javax.transaction.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 
-import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.OPENTABLE;
+//import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.OPENTABLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.iql.exam.constant.ComparisonType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -78,6 +79,7 @@ class UserControllerImplTest {
         assertThat(userRepository.count()).isEqualTo(0);
     }
 
+    @WithMockUser(roles = "USER")
     @Test
     @DisplayName("Тест фильтров 1 - по всем полям - успех")
     void searchWithFilters_allFields_success() throws Exception {
@@ -98,6 +100,7 @@ class UserControllerImplTest {
         assertThat(actual.getProfile().getCash()).isEqualTo(user1.getProfile().getCash());
     }
 
+    @WithMockUser(roles = "USER")
     @Test
     @DisplayName("Тест фильтров 2 - выборочно (возраст и баланс) - успех")
     void searchWithFilters_byAgeAndCash_success() throws Exception {
@@ -116,6 +119,7 @@ class UserControllerImplTest {
         assertThat(actual.getProfile().getCash()).isEqualTo(user3.getProfile().getCash());
     }
 
+    @WithMockUser(roles = "USER")
     @Test
     @DisplayName("Тест фильтров 3 - выборочно (текстовый) - успех")
     void searchWithFilters_textFields_success() throws Exception {
@@ -132,6 +136,7 @@ class UserControllerImplTest {
         assertThat(actual.getName()).isEqualTo(user4.getName());
     }
 
+    @WithMockUser(roles = "USER")
     @Test
     @DisplayName("Тест фильтров 4 - выборочно (возврат списка) - успех")
     void searchWithFilters_textFields_success_resultList() throws Exception {
@@ -145,6 +150,7 @@ class UserControllerImplTest {
         assertThat(actualPage.getContent().size()).isEqualTo(5);
     }
 
+    @WithMockUser(roles = "ADMIN")
     @Test
     @DisplayName("Тест фильтров 5 - тест валидации - исключение")
     void searchWithFilters_validation_ex() throws Exception {
@@ -159,6 +165,7 @@ class UserControllerImplTest {
         assertThat(((MethodArgumentNotValidException) ex).getAllErrors().size()).isEqualTo(3);
     }
 
+    @WithMockUser(roles = {"ADMIN"})
     @Test
     @DisplayName("Тест фильтров 6 - некорректный uri - исключение")
     void searchWithFilters_incorrectUri_ex() throws Exception {
