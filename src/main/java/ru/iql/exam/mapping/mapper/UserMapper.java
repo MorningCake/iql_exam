@@ -62,9 +62,23 @@ public interface UserMapper {
     @IterableMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL)
     Set<UserPhone> newDtosToPhones(Set<NewUserPhoneDto> dtos);
 
+    /**
+     * Получить только не используемые ранее пользователем телефоны
+     * @param newDtos список новых телефонов
+     * @param oldPhones список имеющихся телефонов
+     * @return список не используемых ранее телефонов
+     */
+    default Set<UserPhone> getOnlyNewPhones(Set<NewUserPhoneDto> newDtos, Set<UserPhone> oldPhones) {
+        Set<UserPhone> newPhones = this.newDtosToPhones(newDtos);
+        Set<UserPhone> intersectionsFromOld =
+                oldPhones.stream().filter(newPhones::contains).collect(Collectors.toSet());
+        newPhones.removeAll(intersectionsFromOld);
+        return newPhones;
+    }
+
     @Named("updatePhones")
     default Set<UserPhone> updatePhones(Set<NewUserPhoneDto> dtos, @MappingTarget Set<UserPhone> phones) {
-        Set<UserPhone> newPhones = this.newDtosToPhones(dtos);
+        Set<UserPhone> newPhones = this.getOnlyNewPhones(dtos, phones);
         Set<UserPhone> intersectionsFromOld =
                 phones.stream().filter(newPhones::contains).collect(Collectors.toSet());
         newPhones.removeAll(intersectionsFromOld);

@@ -41,6 +41,7 @@ public class UserControllerImpl implements UserController {
     public UserDto create(NewUserDto dto) {
         // маппинг + хеширование пароля
         User user = userMapper.newDtoToUserAndPassEncode(dto);
+        userService.checkUniqueFields(user);
         user = userService.save(user);
         return userMapper.userToDto(user);
     }
@@ -48,21 +49,19 @@ public class UserControllerImpl implements UserController {
     @Override
     public void updateSelf(SelfUpdateUserDto dto, Long id, Authentication authentication) {
         User user = userService.findById(id);
-        final String oldEmail = user.getEmail();
         userService.checkUpdatedUserByAuth(user, authentication);
+        userService.checkUniqueEmail(user, dto.getEmail());
         user = userMapper.updateSelfFromDto(dto, user);
-        userService.updateSelf(user, oldEmail);
+        userService.save(user);
     }
 
     @Override
     public void update(NewUserDto dto, Long id) {
         User user = userService.findById(id);
-
-        final String oldEmail = user.getEmail();
-        final String oldLogin = user.getCredentials().getLogin();
-
+        Set<UserPhone> onlyNewPhones = userMapper.getOnlyNewPhones(dto.getPhones(), user.getPhones());
+        userService.checkUniqueFields(user, onlyNewPhones, dto.getCredentials().getLogin(), dto.getEmail());
         user = userMapper.updateUserFromNewDtoAndPassEncode(dto, user);
-        userService.update(user, oldEmail, oldLogin);
+        userService.save(user);
     }
 
     @Override

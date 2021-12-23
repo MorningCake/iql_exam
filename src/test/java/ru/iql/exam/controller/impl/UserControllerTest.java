@@ -68,6 +68,7 @@ class UserControllerTest {
     private static final String EMAIL = "email1@email.ru";
     private static final String EMAIL_2 = "email2@email.ru";
     private static final String PHONE = "+79270000001";
+    private static final String PHONE_2 = "+79220000001";
     private static final String LOGIN = "u1";
 
     private User user1;
@@ -351,7 +352,8 @@ class UserControllerTest {
     @Test
     @DisplayName("Редактирование пользователя - неуникальный телефон - исключение")
     void update_phoneDuplicate_ex() throws Exception {
-        NewUserDto updateDto = UserData.createNewUserDto(1000_00, Set.of(PHONE), 26, "Name",
+        // попытка редактировать user1 с телефоном user2
+        NewUserDto updateDto = UserData.createNewUserDto(1000_00, Set.of(PHONE_2), 26, "Name",
                 "name@mail.ru", "name7", "pass");
 
         Exception ex = createIncorrectPutRequest(USERS_URI + user1.getId(), status().isConflict(), updateDto);
