@@ -13,6 +13,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserPhoneServiceImpl implements UserPhoneService {
 
     private final UserPhoneRepository phoneRepository;

@@ -4,9 +4,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import ru.iql.exam.mapping.dto.UserSearch;
 import ru.iql.exam.model.User;
+import ru.iql.exam.model.UserPhone;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Сервис по работе с пользователями
@@ -41,19 +43,20 @@ public interface UserService {
     User save(User user);
 
     /**
+     *
      * Обновить данные юзера, проверив уникальные поля
      * @param user новые данные
-     * @param userFromDb сущность из БД
+     * @param oldLogin
      * @return User
      */
-    User update(User user, User userFromDb);
+    User update(User user, String oldEmail, String oldLogin);
 
     /**
      * Обновить свои данные
      * @param user новые данные
-     * @param userFromDb сущность из БД
+     * @param oldEmail
      */
-    void updateSelf(User user, User userFromDb);
+    void updateSelf(User user, String oldEmail);
 
     /**
      * Проверить, совпадает ли обновляемый пользователь с аутентификацией

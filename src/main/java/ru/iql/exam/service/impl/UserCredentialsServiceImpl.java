@@ -20,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserCredentialsServiceImpl implements UserCredentialsService {
 
     private final UserCredentialsRepository credentialsRepository;

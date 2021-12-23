@@ -51,6 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureEmbeddedDatabase(provider = OPENTABLE)
 @DisplayName("Тест контроллера пользователей")
+@Transactional
 class UserControllerTest {
 
     @Autowired private DataSource dataSource;
@@ -305,7 +306,7 @@ class UserControllerTest {
 
     @WithMockUser(authorities = {"USER"}, username = "u1")
     @Test
-    @DisplayName("Обновление собственных данных - неуникальный логин - исключение")
+    @DisplayName("Обновление собственных данных - неуникальная почта - исключение")
     void updateSelf_duplicate_ex() throws Exception {
         // от лица user1 попробуем записать user2.email
         SelfUpdateUserDto dto = UserData.createSelfUpdateDto(EMAIL_2);

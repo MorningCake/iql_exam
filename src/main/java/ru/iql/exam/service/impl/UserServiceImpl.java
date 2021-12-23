@@ -19,11 +19,13 @@ import ru.iql.exam.service.UserService;
 import ru.iql.exam.utils.PageUtils;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -61,14 +63,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user, User userFromDb) {
-        checkUniqueFieldsExcludeOldSelfAndPhonesMerging(user, userFromDb);
+    public User update(User user, String oldEmail, String oldLogin) {
+        checkUniqueFieldsExcludeOldSelfAndPhonesMerging(user, oldEmail, oldLogin);
         return userRepository.save(user);
     }
 
     @Override
-    public void updateSelf(User user, User userFromDb) {
-        checkUniqueEmailExcludeSelf(user, userFromDb);
+    public void updateSelf(User user, String oldEmail) {
+        checkUniqueEmailExcludeSelf(user, oldEmail);
         userRepository.save(user);
     }
 
@@ -110,16 +112,17 @@ public class UserServiceImpl implements UserService {
      * Проверить уникальность номеров телефона, почты и логина, исключая свои старые данные
      * Также смержить
      * @param user User
-     * @param userFromDb User
+     * @param oldEmail
+     * @param oldLogin
      * @throws AlreadyExistsException
      */
-    private void checkUniqueFieldsExcludeOldSelfAndPhonesMerging(User user, User userFromDb)
+    private void checkUniqueFieldsExcludeOldSelfAndPhonesMerging(User user, String oldEmail, String oldLogin)
             throws AlreadyExistsException
     {
         checkUniquePhones(user);
 
         // исключим старый логин
-        if (!userFromDb.getCredentials().getLogin().equals(user.getCredentials().getLogin())) {
+        if (!oldLogin.equals(user.getCredentials().getLogin())) {
             credentialsService.findByLogin(user.getCredentials().getLogin()).ifPresent((cr) -> {
                 String message = "У пользователя " + user.getName() + " не уникален логин: " + cr.getLogin();
                 log.error(message);
@@ -127,11 +130,11 @@ public class UserServiceImpl implements UserService {
             });
         }
         // исключим старую почту
-        checkUniqueEmailExcludeSelf(user, userFromDb);
+        checkUniqueEmailExcludeSelf(user, oldEmail);
     }
 
     /**
-     * Проверить уникальность телефонов с учетом старых номеров
+     * Проверить уникальность телефонов
      * @param user User
      */
     private void checkUniquePhones(User user) {
@@ -154,9 +157,11 @@ public class UserServiceImpl implements UserService {
     /**
      * Проверить уникальность почты, исключая свои данные
      * @param user User
+     * @param oldEmail
+     * @throws AlreadyExistsException
      */
-    private void checkUniqueEmailExcludeSelf(User user, User userFromDb) throws AlreadyExistsException {
-        if (!userFromDb.getEmail().equals(user.getEmail())) {
+    private void checkUniqueEmailExcludeSelf(User user, String oldEmail) throws AlreadyExistsException {
+        if (!oldEmail.equals(user.getEmail())) {
             if (findByEmail(user.getEmail()).isPresent()) {
                 String message = "У пользователя " + user.getName() + " не уникальна эл.почта: " + user.getEmail();
                 log.error(message);
