@@ -6,8 +6,8 @@ import lombok.experimental.SuperBuilder;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * DTO для создания / редактирования
@@ -33,5 +33,12 @@ public class NewUserDto extends BaseUserDto {
     @NotNull
     @Schema(description = "Список номеров телефонов", required = true)
     @Builder.Default
-    private List<@Valid NewUserPhoneDto> phones = new ArrayList<>();
+    private Set<@Valid NewUserPhoneDto> phones = new HashSet<>();
+
+    /**
+     * Учетные данные
+     */
+    @NotNull @Valid
+    @Schema(description = "Учетные данные", required = true)
+    private NewCredentialsDto credentials;
 }

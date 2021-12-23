@@ -13,6 +13,9 @@ import ru.iql.exam.mapping.dto.*;
 
 import javax.validation.Valid;
 
+/**
+ *
+ */
 @RequestMapping("/api/users")
 @Tag(name = "Пользователи", description = "Работа с пользователями")
 public interface UserController {
@@ -34,8 +37,7 @@ public interface UserController {
     @PutMapping(path = "/self/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Редактирование собственных данных", description = "Редактирование собственных данных")
     void updateSelf(@RequestBody @Valid SelfUpdateUserDto dto, @PathVariable("id") Long id,
-                    @Parameter(hidden = true) Authentication authentication,
-                    @Parameter(hidden = true) @RequestHeader("Authorization") String token);
+                    @Parameter(hidden = true) Authentication authentication);
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -44,6 +46,6 @@ public interface UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(path = "/{id}")
-    @Operation(summary = "Удаление", description = "Удаление данных пользователя (soft)")
+    @Operation(summary = "Удаление", description = "Удаление данных пользователя (hard)")
     void delete(@PathVariable("id") Long id);
 }

@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * DTO для возврта на фронт
@@ -35,5 +35,11 @@ public class UserDto extends BaseUserDto {
      */
     @Schema(description = "Список номеров телефонов")
     @Builder.Default
-    private List<UserPhoneDto> phones = new ArrayList<>();
+    private Set<UserPhoneDto> phones = new HashSet<>();
+
+    /**
+     * Учетные данные
+     */
+    @Schema(description = "Учетные данные", required = true)
+    private UserCredentialsDto credentials;
 }

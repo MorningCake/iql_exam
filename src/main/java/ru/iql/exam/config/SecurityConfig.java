@@ -1,6 +1,6 @@
 package ru.iql.exam.config;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,10 +14,10 @@ import ru.iql.exam.config.jwt.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtFilter jwtFilter;
+    @Autowired
+    private JwtFilter jwtFilter;
 
     private static final String[] AUTH_WHITELIST = {
             // -- Swagger UI v3 (OpenAPI)

@@ -57,10 +57,9 @@ public class UserSpec {
                 predicate = addLikePredicate(email, root.get(User_.EMAIL), builder, predicate);
             }
             if (phone != null) {
-                Join<User, UserPhone> joinedPhone = root.joinList(User_.PHONES, JoinType.INNER);
+                Join<User, UserPhone> joinedPhone = root.joinSet(User_.PHONES, JoinType.INNER);
                 predicate = addLikePredicate(phone, joinedPhone.get(UserPhone_.VALUE), builder, predicate);
             }
-
             return predicate;
         };
     }

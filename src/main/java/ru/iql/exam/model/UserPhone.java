@@ -18,7 +18,7 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserPhone {
 
     @Id
@@ -28,6 +28,7 @@ public class UserPhone {
     /**
      * Номер. Паттерн (пример) +74950123456
      */
+    @EqualsAndHashCode.Include
     @Column(name = "value", nullable = false, unique = true)
     @NotBlank @Pattern(regexp = "^\\+7[\\d]{10}$")
     private String value;

@@ -14,11 +14,12 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@EqualsAndHashCode(exclude = {"id"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserProfile {
 
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     @Setter
     private Long id;
 

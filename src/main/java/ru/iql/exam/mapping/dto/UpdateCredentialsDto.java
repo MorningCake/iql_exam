@@ -7,23 +7,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.NotNull;
-
 /**
- * DTO для возврта на фронт
+ * DTO для редактирования кред
  */
+@Deprecated
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Schema(title = "Профиль", description = "Данные созданного профиля")
-public class UserProfileDto extends NewUserProfileDto {
+@Schema(title = "Учетные данные пользователя для редактирования", description = "Учетные данные редактируемого пользователя")
+public class UpdateCredentialsDto extends NewCredentialsDto {
 
     /**
      *  Идентификатор
      */
-    @Schema(description = "Идентификатор", required = true)
-    @NotNull
+    @Schema(description = "Идентификатор")
     private Long id;
 }

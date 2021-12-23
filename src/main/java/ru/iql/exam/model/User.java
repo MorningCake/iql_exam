@@ -8,7 +8,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Сущность - Пользователь. Удаление - soft
@@ -21,11 +23,12 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     private Long id;
 
     /**
@@ -59,15 +62,15 @@ public class User {
     /**
      * Список номеров телефонов
      */
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     @Builder.Default
-    private List<UserPhone> phones = new ArrayList<>();
+    private Set<UserPhone> phones = new HashSet<>();
 
     /**
-     * Признак удаления (soft delete)
+     * Учетные данные
      */
-    @Column(name = "deleted", nullable = false)
-    @Builder.Default
-    private boolean deleted = false;
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "credentials_id", referencedColumnName = "id")
+    private UserCredentials credentials;
 }

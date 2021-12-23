@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -24,6 +25,7 @@ public class UserPhoneDto extends NewUserPhoneDto {
     /**
      *  Идентификатор
      */
-    @Schema(description = "Идентификатор")
+    @Schema(description = "Идентификатор", required = true)
+    @NotNull
     private Long id;
 }

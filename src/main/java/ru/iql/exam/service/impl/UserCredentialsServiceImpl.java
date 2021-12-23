@@ -15,6 +15,7 @@ import ru.iql.exam.service.UserCredentialsService;
 import ru.iql.exam.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -26,12 +27,17 @@ public class UserCredentialsServiceImpl implements UserCredentialsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    public Optional<UserCredentials> findByLogin(String login) {
+        return credentialsRepository.findByLogin(login);
+    }
+
+    @Override
     public UserCredentials identification(String login) throws EntityNotFoundException {
-        Optional<UserCredentials> optionalCreds = credentialsRepository.findByLogin(login);
+        Optional<UserCredentials> optionalCreds = findByLogin(login);
         if (optionalCreds.isPresent()) {
             return optionalCreds.get();
         } else {
-            throw new EntityNotFoundException("Учетные данные пользователя не найдены!");
+            throw new EntityNotFoundException("Учетные данные пользователя " + login + " не найдены!");
         }
     }
 

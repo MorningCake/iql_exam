@@ -5,6 +5,7 @@ import ru.iql.exam.constant.UserRole;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * Сущность - Учетные данные
@@ -17,36 +18,39 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserCredentials {
 
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     private Long id;
 
     /**
      * Логин
      */
     @Column(name = "login", nullable = false, updatable = false, unique = true)
+    @NotBlank
     private String login;
 
     /**
-     * Хэш пароля
+     * Пароль / Хэш (на БД)
      */
     @Column(name = "hash", nullable = false)
+    @NotBlank
     private String password;
 
     /**
      * Роль
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private UserRole role;
+    @Column(name = "role")
+    @Builder.Default
+    private UserRole role = UserRole.USER;
 
     /**
      * Пользователь
      */
-    @OneToOne(optional = false)
-    @JoinColumn(name = "user_id")
+    @OneToOne(mappedBy = "credentials")
     private User user;
 }
