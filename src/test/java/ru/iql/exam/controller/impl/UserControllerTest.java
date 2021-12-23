@@ -21,8 +21,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.util.NestedServletException;
 import ru.iql.exam.common.UserData;
 import ru.iql.exam.dao.UserRepository;
-import ru.iql.exam.exception.handler.AlreadyExistsException;
-import ru.iql.exam.exception.handler.PermissionDeniedException;
+import ru.iql.exam.exception.AlreadyExistsException;
+import ru.iql.exam.exception.PermissionDeniedException;
 import ru.iql.exam.mapping.dto.NewUserDto;
 import ru.iql.exam.mapping.dto.SelfUpdateUserDto;
 import ru.iql.exam.mapping.dto.UserDto;
@@ -70,6 +70,7 @@ class UserControllerTest {
     private static final String PHONE = "+79270000001";
     private static final String PHONE_2 = "+79220000001";
     private static final String LOGIN = "u1";
+    private static final String LOGIN_2 = "u2";
 
     private User user1;
     private User user2;
@@ -82,8 +83,8 @@ class UserControllerTest {
     void init() {
         user1 = UserData.createUser(100_00, Set.of(PHONE), 20, "User1", EMAIL,
                 LOGIN, "p1");
-        user2 = UserData.createUser(220_00, Set.of("+79220000001"), 18, "User2", "email2@email.ru",
-                "u2", "p2");
+        user2 = UserData.createUser(220_00, Set.of(PHONE_2), 18, "User2", EMAIL_2,
+                LOGIN_2, "p2");
         user3 = UserData.createUser(0,      Set.of("+79250000002"), 20, "User3", "email3@email.ru",
                 "u3", "p3");
         user4 = UserData.createUser(300_00, Set.of("+79270000002"), 20, "User4", "email4@gmail.ru",
@@ -340,7 +341,7 @@ class UserControllerTest {
     @DisplayName("Редактирование пользователя - неуникальный логин - исключение")
     void update_loginDuplicate_ex() throws Exception {
         NewUserDto updateDto = UserData.createNewUserDto(1000_00, Set.of("+79270000005"), 26, "Name",
-                "name@mail.ru", LOGIN, "pass");
+                "name@mail.ru", LOGIN_2, "pass");
 
         Exception ex = createIncorrectPutRequest(USERS_URI + user1.getId(), status().isConflict(), updateDto);
 
@@ -367,7 +368,7 @@ class UserControllerTest {
     @DisplayName("Редактирование пользователя - неуникальная почта - исключение")
     void update_emailDuplicate_ex() throws Exception {
         NewUserDto updateDto = UserData.createNewUserDto(1000_00, Set.of("+79270000005"), 26, "Name",
-                EMAIL, "name7", "pass");
+                EMAIL_2, "name7", "pass");
 
         Exception ex = createIncorrectPutRequest(USERS_URI + user1.getId(), status().isConflict(), updateDto);
 

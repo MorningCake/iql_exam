@@ -9,8 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.iql.exam.dao.UserRepository;
 import ru.iql.exam.dao.spec.UserSpec;
-import ru.iql.exam.exception.handler.AlreadyExistsException;
-import ru.iql.exam.exception.handler.PermissionDeniedException;
+import ru.iql.exam.exception.AlreadyExistsException;
+import ru.iql.exam.exception.PermissionDeniedException;
 import ru.iql.exam.mapping.dto.UserSearch;
 import ru.iql.exam.model.User;
 import ru.iql.exam.model.UserPhone;
@@ -80,7 +80,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void checkUniqueFields(User user) {
-        checkUniqueFields(user, user.getPhones(), user.getCredentials().getLogin(), user.getEmail());
+        checkUniquePhones(user, user.getPhones());
+        checkUniqueLogin(user, user.getCredentials().getLogin());
+        checkUniqueEmail(user, user.getEmail());
     }
 
     @Override
@@ -88,8 +90,13 @@ public class UserServiceImpl implements UserService {
             throws AlreadyExistsException
     {
         checkUniquePhones(user, newPhones);
-        checkUniqueLogin(user, newLogin);
-        checkUniqueEmail(user, newEmail);
+
+        if (!user.getCredentials().getLogin().equals(newLogin)) {
+            checkUniqueLogin(user, newLogin);
+        }
+        if (!user.getEmail().equals(newEmail)) {
+            checkUniqueEmail(user, newEmail);
+        }
     }
 
     /**

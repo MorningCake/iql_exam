@@ -1,18 +1,13 @@
 package ru.iql.exam.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.iql.exam.config.jwt.JwtProvider;
-import ru.iql.exam.constant.UserRole;
 import ru.iql.exam.dao.UserCredentialsRepository;
-import ru.iql.exam.dao.UserRepository;
-import ru.iql.exam.exception.handler.AuthenticationFailedException;
-import ru.iql.exam.model.User;
+import ru.iql.exam.exception.AuthenticationFailedException;
 import ru.iql.exam.model.UserCredentials;
 import ru.iql.exam.service.UserCredentialsService;
-import ru.iql.exam.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;

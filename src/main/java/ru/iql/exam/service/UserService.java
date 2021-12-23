@@ -2,8 +2,8 @@ package ru.iql.exam.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
-import ru.iql.exam.exception.handler.AlreadyExistsException;
-import ru.iql.exam.exception.handler.PermissionDeniedException;
+import ru.iql.exam.exception.AlreadyExistsException;
+import ru.iql.exam.exception.PermissionDeniedException;
 import ru.iql.exam.mapping.dto.UserSearch;
 import ru.iql.exam.model.User;
 import ru.iql.exam.model.UserPhone;

@@ -19,9 +19,6 @@ import java.util.stream.Collectors;
 public interface UserMapper {
     PasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    NewUserPhoneDto phoneToNewDto(UserPhone phone);
-//    UserPhone phoneToNewDto(NewUserPhoneDto dto);
-
     UserPhoneDto phoneToDto(UserPhone phone);
 
     @IterableMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL)
@@ -30,14 +27,9 @@ public interface UserMapper {
     UserProfile newDtoToProfile(NewUserProfileDto dto);
     UserProfileDto profileToDto(UserProfile profile);
 
-    BaseUserDto userToBaseDto(User user);
-    User baseDtoToUser(BaseUserDto dto);
-
-//    NewUserDto userToNewDto(User user);
     User newDtoToUserAndPassEncode(NewUserDto dto);
 
     UserDto userToDto(User user);
-    User dtoToUser(NewUserDto dto);
 
     @IterableMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL)
     List<UserDto> usersToDtoList(List<User> users);
@@ -78,7 +70,7 @@ public interface UserMapper {
 
     @Named("updatePhones")
     default Set<UserPhone> updatePhones(Set<NewUserPhoneDto> dtos, @MappingTarget Set<UserPhone> phones) {
-        Set<UserPhone> newPhones = this.getOnlyNewPhones(dtos, phones);
+        Set<UserPhone> newPhones = this.newDtosToPhones(dtos);
         Set<UserPhone> intersectionsFromOld =
                 phones.stream().filter(newPhones::contains).collect(Collectors.toSet());
         newPhones.removeAll(intersectionsFromOld);
