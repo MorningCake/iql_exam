@@ -6,10 +6,11 @@ import org.springframework.stereotype.Service;
 import ru.iql.exam.config.jwt.JwtProvider;
 import ru.iql.exam.dao.UserCredentialsRepository;
 import ru.iql.exam.exception.AuthenticationFailedException;
+import ru.iql.exam.exception.EntityNotFoundException;
 import ru.iql.exam.model.UserCredentials;
 import ru.iql.exam.service.UserCredentialsService;
 
-import javax.persistence.EntityNotFoundException;
+
 import javax.transaction.Transactional;
 import java.util.Optional;
 

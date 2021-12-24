@@ -12,27 +12,28 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.util.NestedServletException;
 import ru.iql.exam.common.UserData;
 import ru.iql.exam.dao.UserRepository;
 import ru.iql.exam.exception.AlreadyExistsException;
+import ru.iql.exam.exception.EntityNotFoundException;
 import ru.iql.exam.exception.PermissionDeniedException;
 import ru.iql.exam.mapping.dto.NewUserDto;
 import ru.iql.exam.mapping.dto.SelfUpdateUserDto;
 import ru.iql.exam.mapping.dto.UserDto;
 import ru.iql.exam.mapping.dto.UserSearch;
-import ru.iql.exam.mapping.mapper.UserMapper;
 import ru.iql.exam.model.User;
 
 import javax.sql.DataSource;
 import javax.transaction.Transactional;
-
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
@@ -40,12 +41,9 @@ import java.util.Set;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.OPENTABLE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static ru.iql.exam.constant.ComparisonType.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.iql.exam.constant.ComparisonType.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -58,7 +56,6 @@ class UserControllerTest {
     @Autowired private UserRepository userRepository;
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
-    @Autowired private UserMapper userMapper;
 
     private static final String SEARCH_URI = "/api/users/search/filters";
     private static final String USERS_URI = "/api/users/";
@@ -383,11 +380,10 @@ class UserControllerTest {
         NewUserDto updateDto = UserData.createNewUserDto(1000_00, Set.of("+79270000005"), 26, "Name",
                 "name@mail.ru", "name7", "pass");
 
-        assertThrows(
-                NestedServletException.class,
-                () -> createIncorrectPutRequest(USERS_URI + "10000", status().isNotFound(), updateDto),
-                "Пользователь ID 10000 не найден!"
-        );
+        Exception ex = createIncorrectPutRequest(USERS_URI + "10000", status().isNotFound(), updateDto);
+
+        assertThat(ex).isNotNull();
+        assertThat(ex instanceof EntityNotFoundException).isTrue();
     }
 
     @WithMockUser(authorities = "ADMIN")
@@ -418,11 +414,10 @@ class UserControllerTest {
     @Test
     @DisplayName("Удаление пользователя - некорректный id - исключение")
     void delete_incorrectId_ex() throws Exception {
-        assertThrows(
-                NestedServletException.class,
-                () -> createIncorrectDeleteRequest(USERS_URI + "10000", status().isNotFound()),
-                "Пользователь ID 10000 не найден!"
-        );
+        Exception ex = createIncorrectDeleteRequest(USERS_URI + "10000", status().isNotFound());
+
+        assertThat(ex).isNotNull();
+        assertThat(ex instanceof EntityNotFoundException).isTrue();
     }
 
     /**

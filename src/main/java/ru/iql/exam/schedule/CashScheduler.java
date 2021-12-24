@@ -3,6 +3,7 @@ package ru.iql.exam.schedule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.iql.exam.dao.UserRepository;
@@ -17,6 +18,7 @@ import ru.iql.exam.dao.UserRepository;
 public class CashScheduler {
 
     private final UserRepository userRepository;
+    private final CacheManager cacheManager;
 
     @Value("${scheduler_task.autoincrement.increment_coef}")
     private final double INCREMENT_COEF = 0.1;
@@ -24,8 +26,11 @@ public class CashScheduler {
     @Value("${scheduler_task.autoincrement.limit_coef}")
     private final double LIMIT_COEF = 1.07;
 
-    @Scheduled(fixedDelay = 5000)  //todo 20000
+    @Scheduled(fixedDelay = 20000)
     public void cashIncrementTask() {
+        // очистить кэш 2 lvl
+        cacheManager.getCacheNames().parallelStream().forEach(name -> cacheManager.getCache(name).clear());
+
         logInfo("Запущена задача Автоинкремент счетов");
         userRepository.findAllByProfileAutoIncrementedIsTrueAndProfileStartCashGreaterThan(0).stream()
                 .forEach(u -> {

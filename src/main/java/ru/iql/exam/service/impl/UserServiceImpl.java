@@ -2,6 +2,9 @@ package ru.iql.exam.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 import ru.iql.exam.dao.UserRepository;
 import ru.iql.exam.dao.spec.UserSpec;
 import ru.iql.exam.exception.AlreadyExistsException;
+import ru.iql.exam.exception.EntityNotFoundException;
 import ru.iql.exam.exception.PermissionDeniedException;
 import ru.iql.exam.mapping.dto.UserSearch;
 import ru.iql.exam.model.User;
@@ -19,7 +23,6 @@ import ru.iql.exam.service.UserPhoneService;
 import ru.iql.exam.service.UserService;
 import ru.iql.exam.utils.PageUtils;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.Set;
@@ -35,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final UserCredentialsService credentialsService;
 
     @Override
+    @Cacheable(value = "users")
     public Page<User> searchWithFilters(UserSearch params) {
         Specification<User> userFiltersSpec = UserSpec.getFiltersSpec(
                 params.getAgeFilter(), params.getCashFilter(), params.getName(), params.getEmail(), params.getPhone()
@@ -49,6 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "user")
     public User findById(Long id) throws EntityNotFoundException {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
@@ -59,6 +64,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CachePut(value = "user")
     public User save(User user) {
         return userRepository.save(user);
     }
@@ -74,6 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = "user")
     public void delete(User user) {
         userRepository.delete(user);
     }
