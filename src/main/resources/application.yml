@@ -32,4 +32,9 @@ jwt:
   secret: secret_key
   expired_time_days: 3
 
+scheduler_task:
+  autoincrement:
+    increment_coef: 0.1
+    limit_coef: 1.07
+
 

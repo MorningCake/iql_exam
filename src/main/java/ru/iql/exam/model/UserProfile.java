@@ -38,10 +38,10 @@ public class UserProfile {
     @NotNull
     private Integer startCash;
 
-//    @Column(name = "auto_incremented")
-//    @Setter
-//    @Builder.Default
-//    private boolean autoIncremented = true;
+    @Column(name = "auto_incremented")
+    @Setter
+    @Builder.Default
+    private boolean autoIncremented = true;
 
     @PrePersist
     private void initStartCash() {
