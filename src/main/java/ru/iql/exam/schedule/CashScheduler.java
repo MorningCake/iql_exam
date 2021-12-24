@@ -32,7 +32,7 @@ public class CashScheduler {
         cacheManager.getCacheNames().parallelStream().forEach(name -> cacheManager.getCache(name).clear());
 
         logInfo("Запущена задача Автоинкремент счетов");
-        userRepository.findAllByProfileAutoIncrementedIsTrueAndProfileStartCashGreaterThan(0).stream()
+        userRepository.findAllByProfileAutoIncrementedIsTrueAndProfileStartCashGreaterThan(0)
                 .forEach(u -> {
                     int increment = (int) (INCREMENT_COEF * u.getProfile().getCash());
                     if (increment <= (int) (LIMIT_COEF * u.getProfile().getStartCash())) {

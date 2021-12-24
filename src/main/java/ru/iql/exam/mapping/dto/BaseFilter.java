@@ -6,7 +6,6 @@ import lombok.experimental.SuperBuilder;
 import ru.iql.exam.constant.ComparisonType;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 /**
  * Базовый DTO для поиска по фильтру

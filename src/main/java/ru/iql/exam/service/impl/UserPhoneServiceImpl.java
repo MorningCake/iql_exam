@@ -7,9 +7,7 @@ import ru.iql.exam.model.UserPhone;
 import ru.iql.exam.service.UserPhoneService;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor

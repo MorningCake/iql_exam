@@ -29,8 +29,8 @@ class UserMapperTest {
     private static final String LOGIN = "login";
     private static final String PASSWORD = "a";
 
-    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
-    private PasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Test
     @DisplayName("Тест маппинга NewUserDto -> User")
