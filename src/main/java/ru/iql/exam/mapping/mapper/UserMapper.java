@@ -4,10 +4,7 @@ import org.mapstruct.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.iql.exam.mapping.dto.*;
-import ru.iql.exam.model.User;
-import ru.iql.exam.model.UserCredentials;
-import ru.iql.exam.model.UserPhone;
-import ru.iql.exam.model.UserProfile;
+import ru.iql.exam.model.*;
 
 import java.util.List;
 import java.util.Set;
@@ -27,8 +24,11 @@ public interface UserMapper {
     UserProfile newDtoToProfile(NewUserProfileDto dto);
     UserProfileDto profileToDto(UserProfile profile);
 
+    @Mapping(target = "department.id", source = "departmentId")
     User newDtoToUserAndPassEncode(NewUserDto dto);
 
+    //@Mapping(target = "departmentId", source = "department.id")
+    @Mapping(target = "departmentDto", source = "department", qualifiedByName = "Department")
     UserDto userToDto(User user);
 
     @IterableMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL)
@@ -83,7 +83,11 @@ public interface UserMapper {
     @Mapping(target = "credentials", source = "credentials", qualifiedByName = "updateCredentials")
     @Mapping(target = "profile", source = "profile", qualifiedByName = "updateProfile")
     @Mapping(target = "phones", source = "phones", qualifiedByName = "updatePhones")
+    @Mapping(target = "department.id", source = "departmentId")
     User updateUserFromNewDtoAndPassEncode(NewUserDto dto, @MappingTarget User user);
 
     User updateSelfFromDto(SelfUpdateUserDto dto, @MappingTarget User user);
+
+    @Named("Department")
+    DepartmentDto toDepartmentDto(Department dep);
 }

@@ -23,7 +23,7 @@ create table iql_user.users (
 create table iql_user.phones (
     id int8 not null primary key,
     value varchar(20) not null unique,
-    user_id int8 references iql_user.users (id)
+    user_id int8 references iql_user.users (id) on delete cascade
 );
 
 create index on iql_user.users (name);

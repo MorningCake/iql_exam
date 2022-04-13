@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * DTO для создания / редактирования
@@ -41,4 +42,11 @@ public class NewUserDto extends BaseUserDto {
     @NotNull @Valid
     @Schema(description = "Учетные данные", required = true)
     private NewCredentialsDto credentials;
+
+    /**
+     * ID департамента
+     */
+    @NotNull
+    @Schema(description = "ID департамента", required = true)
+    private UUID departmentId;
 }

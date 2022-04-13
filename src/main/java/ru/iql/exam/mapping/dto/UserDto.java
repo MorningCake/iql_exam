@@ -6,6 +6,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * DTO для возврта на фронт
@@ -42,4 +43,10 @@ public class UserDto extends BaseUserDto {
      */
     @Schema(description = "Учетные данные", required = true)
     private UserCredentialsDto credentials;
+
+    /**
+     * ID департамента
+     */
+    @Schema(description = "департамент", required = true)
+    private DepartmentDto departmentDto;
 }

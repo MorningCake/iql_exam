@@ -71,4 +71,11 @@ public class User {
     @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "credentials_id", referencedColumnName = "id")
     private UserCredentials credentials;
+
+    /**
+     * Департамент
+     */
+    @ManyToOne
+    @JoinColumn(name = "department_id", referencedColumnName = "id")
+    private Department department;
 }

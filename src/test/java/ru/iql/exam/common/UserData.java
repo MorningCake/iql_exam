@@ -4,18 +4,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.iql.exam.constant.ComparisonType;
 import ru.iql.exam.mapping.dto.*;
-import ru.iql.exam.model.User;
-import ru.iql.exam.model.UserCredentials;
-import ru.iql.exam.model.UserPhone;
-import ru.iql.exam.model.UserProfile;
+import ru.iql.exam.model.*;
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
  * Класс для генерации сущностей и DTO для тестов
  */
 public class UserData {
+    public static final UUID DEPARTMENT_ID = UUID.fromString("c35b9fff-8f4c-460b-a87d-25123b8ef368");
+    public static final String DEPARTMENT_NAME = "Отдел разработки ПО";
 
     public static User createUser(Integer cash, Set<String> phoneNumbers, Integer age, String name, String email,
                                   String login, String password) {
@@ -32,7 +32,17 @@ public class UserData {
                 .password(encoder.encode(password))
                 .build();
 
-        return User.builder().age(age).name(name).email(email).profile(profile).phones(phones).credentials(credentials).build();
+        Department dep = Department.builder().id(DEPARTMENT_ID).name(DEPARTMENT_NAME).build();
+
+        return User.builder()
+                .age(age)
+                .name(name)
+                .email(email)
+                .profile(profile)
+                .phones(phones)
+                .credentials(credentials)
+                .department(dep)
+                .build();
     }
 
     public static UserSearch createAllFilters(
@@ -101,6 +111,7 @@ public class UserData {
                 .age(age)
                 .name(name)
                 .email(email)
+                .departmentId(DEPARTMENT_ID)
                 .build();
     }
 

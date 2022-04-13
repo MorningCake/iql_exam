@@ -37,4 +37,8 @@ scheduler_task:
     increment_coef: 0.1
     limit_coef: 1.07
 
+logging:
+  level:
+    org.springframework.orm.jpa: DEBUG
+    org.springframework.transaction: DEBUG
 

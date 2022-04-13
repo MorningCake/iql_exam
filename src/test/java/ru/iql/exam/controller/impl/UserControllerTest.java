@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import org.hibernate.resource.transaction.internal.TransactionCoordinatorBuilderInitiator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +21,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.transaction.annotation.TransactionManagementConfigurationSelector;
+import org.springframework.transaction.reactive.TransactionSynchronizationManager;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.iql.exam.common.UserData;
+import ru.iql.exam.dao.UserCredentialsRepository;
+import ru.iql.exam.dao.UserProfileRepository;
 import ru.iql.exam.dao.UserRepository;
 import ru.iql.exam.exception.AlreadyExistsException;
 import ru.iql.exam.exception.EntityNotFoundException;
@@ -47,13 +52,15 @@ import static ru.iql.exam.constant.ComparisonType.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureEmbeddedDatabase(provider = OPENTABLE)
+//@AutoConfigureEmbeddedDatabase(provider = OPENTABLE)
 @DisplayName("Тест контроллера пользователей")
-@Transactional
+//@Transactional
 class UserControllerTest {
 
     @Autowired private DataSource dataSource;
     @Autowired private UserRepository userRepository;
+    @Autowired private UserCredentialsRepository credentialsRepository;
+    @Autowired private UserProfileRepository profileRepository;
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
@@ -92,11 +99,14 @@ class UserControllerTest {
                 "u6", "p6");
 
         userRepository.deleteAll();  //удалить админа, добавленного миграцией
+        profileRepository.deleteAll();
+        credentialsRepository.deleteAll();
         userRepository.saveAll(List.of(user1, user2, user3, user4, user5, user6));
         assertThat(userRepository.count()).isEqualTo(6);
     }
 
     @AfterEach
+    @Transactional(Transactional.TxType.NOT_SUPPORTED)
     void clearing() {
         userRepository.deleteAll();
         assertThat(userRepository.count()).isEqualTo(0);
@@ -201,6 +211,7 @@ class UserControllerTest {
         Exception ex = createIncorrectPostRequest(INCORRECT_URI, status().isNotFound(), searchParams);
     }
 
+    @Transactional
     @WithMockUser(authorities = {"ADMIN"})
     @Test
     @DisplayName("Создание пользователя - успех")
@@ -217,10 +228,18 @@ class UserControllerTest {
         assertThat(actual.getPhones().size()).isEqualTo(newUserDto.getPhones().size());
 
         // проверка на БД
+        checkFromDbInNewTransaction(actual);
+    }
+
+//    @Transactional(Transactional.TxType.NOT_SUPPORTED)
+    void checkFromDbInNewTransaction(UserDto actual) {
+        userRepository.flush();
         User actualFromDb = userRepository.getById(actual.getId());
         assertThat(actualFromDb.getName()).isEqualTo(actual.getName());
         assertThat(actualFromDb.getEmail()).isEqualTo(actual.getEmail());
         assertThat(actualFromDb.getPhones().size()).isEqualTo(actual.getPhones().size());
+        assertThat(actualFromDb.getDepartment().getId()).isEqualTo(actual.getDepartmentDto().getId());
+        assertThat(actualFromDb.getDepartment().getName()).isNotNull();
     }
 
     @WithMockUser(authorities = {"ADMIN"})
